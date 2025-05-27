@@ -13,8 +13,10 @@ _Mom's Rasoie is a culinary web application to preserve, organize, and share tra
 - Search and filter recipes.
 - (Add more features as implemented in your project)
 
-ScreenShots
-## Screenshots![Screenshot from 2025-05-27 23-19-31](https://github.com/user-attachments/assets/a95cbec2-99c3-4a4e-9070-d04e7bb31d47)
+
+## Screenshots
+![Screenshot from 2025-05-27 23-53-09](https://github.com/user-attachments/assets/8f1b9440-0814-4ce7-8eb4-890c0cd762c7)
+![Screenshot from 2025-05-27 23-19-31](https://github.com/user-attachments/assets/a95cbec2-99c3-4a4e-9070-d04e7bb31d47)
 ![Screenshot from 2025-05-27 23-28-28](https://github.com/user-attachments/assets/907b2067-7fdc-49fc-97d8-d8f95d9ba32c)
 ![Screenshot from 2025-05-27 23-27-37](https://github.com/user-attachments/assets/519c89a4-851e-477f-b241-378c41b61744)
 
