@@ -1,61 +1,95 @@
 import React from 'react'
 import './App.css'
-import {createBrowserRouter,RouterProvider} from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Home from './pages/Home'
 import MainNavigation from './components/MainNavigation'
-import axios from 'axios'
-import  AddFoodRecipe  from './pages/AddFoodRecipe'
+import AddFoodRecipe from './pages/AddFoodRecipe'
 import EditRecipe from './pages/EditRecipe'
 import RecipeDetails from './pages/RecipeDetails'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import { API_ENDPOINTS } from './config/api'
 
-
-const getAllRecipes=async()=>{
-  let allRecipes=[]
-  await axios.get('http://localhost:5000/recipe').then(res=>{
-    allRecipes=res.data
-  })
-  return allRecipes
+const getAllRecipes = async () => {
+    try {
+        const response = await fetch(API_ENDPOINTS.RECIPES)
+        const allRecipes = await response.json()
+        return allRecipes
+    } catch (error) {
+        console.error('Error fetching recipes:', error)
+        return []
+    }
 }
 
-const getMyRecipes=async()=>{
-  let user=JSON.parse(localStorage.getItem("user"))
-  let allRecipes=await getAllRecipes()
-  return allRecipes.filter(item=>item.createdBy===user._id)
+const getMyRecipes = async () => {
+    try {
+        const user = JSON.parse(localStorage.getItem("user"))
+        if (!user) return []
+        
+        const allRecipes = await getAllRecipes()
+        return allRecipes.filter(item => item.createdBy?._id === user._id)
+    } catch (error) {
+        console.error('Error fetching my recipes:', error)
+        return []
+    }
 }
 
-const getFavRecipes=()=>{
-  return JSON.parse(localStorage.getItem("fav"))
+const getFavRecipes = () => {
+    try {
+        return JSON.parse(localStorage.getItem("fav")) || []
+    } catch (error) {
+        console.error('Error parsing favorites:', error)
+        return []
+    }
 }
 
-const getRecipe=async({params})=>{
-  let recipe;
-  await axios.get(`http://localhost:5000/recipe/${params.id}`)
-  .then(res=>recipe=res.data)
-
-  await axios.get(`http://localhost:5000/user/${recipe.createdBy}`)
-  .then(res=>{
-    recipe={...recipe,email:res.data.email}
-  })
-
-  return recipe
+const getRecipe = async ({ params }) => {
+    try {
+        const response = await fetch(API_ENDPOINTS.RECIPE_BY_ID(params.id))
+        if (!response.ok) {
+            throw new Error('Recipe not found')
+        }
+        const recipe = await response.json()
+        return recipe
+    } catch (error) {
+        console.error('Error fetching recipe:', error)
+        throw error
+    }
 }
 
-const router=createBrowserRouter([
-  {path:"/",element:<MainNavigation/>,children:[
-    {path:"/",element:<Home/>,loader:getAllRecipes},
-    {path:"/myRecipe",element:<Home/>,loader:getMyRecipes},
-    {path:"/favRecipe",element:<Home/>,loader:getFavRecipes},
-    {path:"/addRecipe",element:<AddFoodRecipe/>},
-    {path:"/editRecipe/:id",element:<EditRecipe/>},
-    {path:"/recipe/:id",element:<RecipeDetails/>,loader:getRecipe}
-  ]}
- 
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <MainNavigation />,
+        children: [
+            { path: "/", element: <Home />, loader: getAllRecipes },
+            { 
+                path: "/myRecipe", 
+                element: <ProtectedRoute><Home /></ProtectedRoute>, 
+                loader: getMyRecipes 
+            },
+            { 
+                path: "/favRecipe", 
+                element: <ProtectedRoute><Home /></ProtectedRoute>, 
+                loader: getFavRecipes 
+            },
+            { 
+                path: "/addRecipe", 
+                element: <ProtectedRoute><AddFoodRecipe /></ProtectedRoute> 
+            },
+            { 
+                path: "/editRecipe/:id", 
+                element: <ProtectedRoute><EditRecipe /></ProtectedRoute> 
+            },
+            { path: "/recipe/:id", element: <RecipeDetails />, loader: getRecipe }
+        ]
+    }
 ])
 
 export default function App() {
-  return (
-   <>
-   <RouterProvider router={router}></RouterProvider>
-   </>
-  )
+    return (
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
+    )
 }

@@ -1,22 +1,56 @@
-import React, { useState } from 'react'
-import foodRecipe from '../assets/foodRecipe.png'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useLoaderData } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import RecipeItems from '../components/RecipeItems'
-import { useNavigate } from 'react-router-dom'
-import Modal from '../components/Modal'
-import InputForm from '../components/InputForm'
+import SearchBar from '../components/SearchBar'
+import AuthForm from '../components/AuthForm'
+import { FaPlus } from 'react-icons/fa'
+import axios from 'axios'
+import './Home.css'
 
 export default function Home() {
     const navigate = useNavigate()
-    const [isOpen, setIsOpen] = useState(false)
+    const { isAuthenticated } = useAuth()
+    const [showAuthModal, setShowAuthModal] = useState(false)
+    const [recipes, setRecipes] = useState([])
+    const [filteredRecipes, setFilteredRecipes] = useState([])
+    const [loading, setLoading] = useState(false)
+    const initialRecipes = useLoaderData()
 
-    const addRecipe = () => {
-        let token = localStorage.getItem("token")
-        if (token)
-            navigate("/addRecipe")
-        else {
-            setIsOpen(true)
+    useEffect(() => {
+        if (initialRecipes) {
+            setRecipes(Array.isArray(initialRecipes) ? initialRecipes : [])
+            setFilteredRecipes(Array.isArray(initialRecipes) ? initialRecipes : [])
+        }
+    }, [initialRecipes])
+
+    const handleAddRecipe = () => {
+        if (isAuthenticated) {
+            navigate('/addRecipe')
+        } else {
+            setShowAuthModal(true)
+        }
+    }
+
+    const handleSearch = async (searchTerm) => {
+        if (!searchTerm.trim()) {
+            setFilteredRecipes(recipes)
+            return
+        }
+
+        setLoading(true)
+        try {
+            const response = await axios.get(`http://localhost:5000/recipe/search?q=${encodeURIComponent(searchTerm)}`)
+            setFilteredRecipes(response.data)
+        } catch (error) {
+            console.error('Search error:', error)
+            // Fallback to client-side search
+            const filtered = recipes.filter(recipe =>
+                recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            setFilteredRecipes(filtered)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -24,21 +58,66 @@ export default function Home() {
         <>
             <section className='home'>
                 <div className='left'>
-                    <h1>Food Recipe</h1>
-                    <h5>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</h5>
-                    <button onClick={addRecipe}>Share your recipe</button>
+                    <h1>Discover Amazing Recipes</h1>
+                    <h5>
+                        Welcome to Mom's Rasoie - your culinary journey starts here! 
+                        Explore traditional family recipes, share your own creations, 
+                        and discover the joy of cooking with our community of food lovers. 
+                        From quick weeknight dinners to special occasion feasts, 
+                        find inspiration for every meal.
+                    </h5>
+                    <button onClick={handleAddRecipe}>
+                        <FaPlus />
+                        Share Your Recipe
+                    </button>
                 </div>
                 <div className='right'>
-                    <img src={foodRecipe} width="320px" height="300px"></img>
+                    <img 
+                        src="/src/assets/foodRecipe.png" 
+                        alt="Delicious Food Recipes"
+                        width="400"
+                        height="400"
+                    />
                 </div>
             </section>
-            <div className='bg'>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#d4f6e8" fillOpacity="1" d="M0,32L40,32C80,32,160,32,240,58.7C320,85,400,139,480,149.3C560,160,640,128,720,101.3C800,75,880,53,960,80C1040,107,1120,181,1200,213.3C1280,245,1360,235,1400,229.3L1440,224L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"></path></svg>
+
+            <div className='recipe-section'>
+                <div className='recipe-header'>
+                    <h2>Featured Recipes</h2>
+                    <p>Discover the most loved recipes from our community</p>
+                </div>
+                
+                <SearchBar onSearch={handleSearch} recipes={recipes} />
+                
+                {loading && (
+                    <div className="loading-message">
+                        <p>Searching recipes...</p>
+                    </div>
+                )}
+                
+                <RecipeItems recipes={filteredRecipes} />
+                
+                {!loading && filteredRecipes.length === 0 && recipes.length > 0 && (
+                    <div className="no-results">
+                        <p>No recipes found matching your search.</p>
+                        <p>Try a different search term or browse all recipes.</p>
+                    </div>
+                )}
             </div>
-            {(isOpen) && <Modal onClose={() => setIsOpen(false)}><InputForm setIsOpen={() => setIsOpen(false)} /></Modal>}
-            <div className='recipe'>
-                <RecipeItems />
-            </div>
+
+            {showAuthModal && (
+                <div className="modal-overlay" onClick={() => setShowAuthModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button
+                            className="modal-close"
+                            onClick={() => setShowAuthModal(false)}
+                        >
+                            ×
+                        </button>
+                        <AuthForm onClose={() => setShowAuthModal(false)} />
+                    </div>
+                </div>
+            )}
         </>
     )
 }

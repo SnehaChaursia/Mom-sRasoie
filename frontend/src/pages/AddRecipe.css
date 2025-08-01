@@ -1,0 +1,217 @@
+/* Add Recipe Form Styling */
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.form-control label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #5d4037;
+  margin-bottom: 0.5rem;
+}
+
+.form-control label::after {
+  content: " *";
+  color: #e74c3c;
+}
+
+.form-control input,
+.form-control textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #d7ccc8;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fff8e1;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  color: #5d4037 !important; /* Force text color to be visible */
+}
+
+.form-control input:focus,
+.form-control textarea:focus {
+  outline: none;
+  border-color: #e67e22;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+  color: #5d4037 !important; /* Maintain text color on focus */
+}
+
+.form-control input::placeholder,
+.form-control textarea::placeholder {
+  color: #a1887f;
+}
+
+.form-control textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-control input[type="file"] {
+  padding: 0.75rem;
+  background: #fff3e0;
+  cursor: pointer;
+  color: #5d4037; /* Ensure file input text is visible */
+}
+
+.form-control input[type="file"]:hover {
+  background: #ffe0b2;
+}
+
+.form button[type="submit"] {
+  background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+  margin-top: 1rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.form button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+  background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+}
+
+.form button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form button[type="submit"].loading {
+  position: relative;
+  color: transparent;
+}
+
+.form button[type="submit"].loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border-left: 4px solid #c62828;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.error-message::before {
+  content: "⚠";
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 700px;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 600px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 500px;
+    margin: 0.5rem auto;
+    padding: 1rem;
+  }
+  
+  .form-control input,
+  .form-control textarea {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+  }
+  
+  .form button[type="submit"] {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 100%;
+    margin: 0.25rem;
+    padding: 0.75rem;
+  }
+  
+  .form-control input,
+  .form-control textarea {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  .form button[type="submit"] {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .form-control input,
+  .form-control textarea {
+    padding: 0.625rem;
+    font-size: 0.8rem;
+  }
+  
+  .form button[type="submit"] {
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+  }
+} 

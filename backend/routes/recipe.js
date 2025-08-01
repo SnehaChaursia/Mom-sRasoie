@@ -1,12 +1,13 @@
-const express=require("express")
-const { getRecipes,getRecipe,addRecipe,editRecipe,deleteRecipe,upload} = require("../controller/recipe")
-const verifyToken = require("../middleware/auth")
-const router=express.Router()
+const express = require("express")
+const { getRecipes, searchRecipes, getRecipe, addRecipe, editRecipe, deleteRecipe, upload } = require("../controller/recipe")
+const auth = require("../middleware/auth")
+const router = express.Router()
 
-router.get("/",getRecipes) //Get all recipes
-router.get("/:id",getRecipe) //Get recipe by id
-router.post("/",upload.single('file'),verifyToken ,addRecipe) //add recipe
-router.put("/:id",upload.single('file'),editRecipe) //Edit recipe
-router.delete("/:id",deleteRecipe) //Delete recipe
+router.get("/", getRecipes) // Get all recipes
+router.get("/search", searchRecipes) // Search recipes
+router.get("/:id", getRecipe) // Get recipe by id
+router.post("/", auth, upload.single('file'), addRecipe) // Add recipe (protected)
+router.put("/:id", auth, upload.single('file'), editRecipe) // Edit recipe (protected)
+router.delete("/:id", auth, deleteRecipe) // Delete recipe (protected)
 
-module.exports=router
+module.exports = router

@@ -1,0 +1,125 @@
+/* Home page specific styles */
+.recipe-section {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.recipe-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.recipe-header h2 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: #5d4037;
+    margin-bottom: 0.5rem;
+}
+
+.recipe-header p {
+    color: #8d6e63;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+/* Search functionality styles */
+.loading-message {
+    text-align: center;
+    padding: 2rem;
+    color: #8d6e63;
+    font-size: 1.1rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #8d6e63;
+}
+
+.no-results p:first-child {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #5d4037;
+}
+
+.no-results p:last-child {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #8d6e63;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: #fff3e0;
+    color: #5d4037;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .recipe-section {
+        padding: 1rem;
+    }
+    
+    .recipe-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .recipe-section {
+        padding: 0.5rem;
+    }
+    
+    .recipe-header {
+        margin-bottom: 1rem;
+    }
+    
+    .modal-content {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+} 
